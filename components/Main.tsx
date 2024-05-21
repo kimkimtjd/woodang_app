@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Linking, View, Text, StyleSheet, TouchableOpacity, Dimensions, BackHandler, Alert, PermissionsAndroid, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, BackHandler, Alert, PermissionsAndroid, Platform } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
+import { shadow } from 'react-native-paper';
 
 const Width = Dimensions.get('window').width;
 const Height = Dimensions.get('window').height;
@@ -11,6 +12,7 @@ interface BottomNavigationTabProps {
   isActive: boolean;
 }
 
+/* navbar */
 const BottomNavigationTab: React.FC<BottomNavigationTabProps> = ({ label, onPress, isActive }) => {
   const styles = StyleSheet.create({
     tab: {
@@ -18,6 +20,13 @@ const BottomNavigationTab: React.FC<BottomNavigationTabProps> = ({ label, onPres
       alignItems: 'center',
       justifyContent: 'center',
       height: 64,
+      backgroundColor:"rgba(238, 240, 246, 1)",
+      shadowOffset: {
+        width: 5,
+        height: 5,
+      },
+      elevation: 5,
+      shadowColor: '#E21B5814',
       // backgroundColor: isActive ? 'lightgray' : 'white', // Change color based on active state
       borderTopLeftRadius: 10
     },
@@ -26,6 +35,7 @@ const BottomNavigationTab: React.FC<BottomNavigationTabProps> = ({ label, onPres
       alignItems: 'center',
       justifyContent: 'center',
       height: 64,
+      backgroundColor:"rgba(238, 240, 246, 1)",
       // backgroundColor: isActive ? 'lightgray' : 'white', // Change color based on active state
       borderTopRightRadius: 10
     },
@@ -48,8 +58,10 @@ const BottomNavigationTab: React.FC<BottomNavigationTabProps> = ({ label, onPres
       }
     </TouchableOpacity>
   );
+
 };
 
+/* navbar */
 const BottomNavigationBar = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [fcmToken, setFcmToken] = useState('');
@@ -59,6 +71,7 @@ const BottomNavigationBar = () => {
     { label: '일지', onPress: () => console.log('Settings pressed') },
   ];
 
+  /* 알림권한부여 */
   const requestPermissions_first = async () => {
     try {
       if (Platform.OS === 'android') {
@@ -84,6 +97,7 @@ const BottomNavigationBar = () => {
     }
   };
 
+  /* 안드로이드확인후 알림권한을 실행 */
   useEffect(() => {
     if (Platform.OS === 'android') {
       requestPermissions_first()
@@ -91,6 +105,7 @@ const BottomNavigationBar = () => {
 
   }, []);
 
+  /* FCM 토큰 생성 */  
   const getFcmToken = async () => {
     const token = await messaging().getToken();
     if (token) {
@@ -100,42 +115,34 @@ const BottomNavigationBar = () => {
     }
   };
 
+  /* navbar 탭전환 */ 
   const handleTabPress = (index: number) => {
     setActiveTab(index);
   };
 
+  /* 뒤로 가기 앱 종료 */
   const backAction = () => {
     Alert.alert(
       '알림',
       '앱을 종료하시겠습니까?',
       [
-        { text: '취소', onPress: () => { }, style: 'cancel' },
-        {
-          text: '확인',
-          onPress: () => {
-            BackHandler.exitApp();
-          },
-          style: 'destructive',
-        },
+        { text: '취소', onPress: () => null, style: 'cancel' },
+        { text: '확인', onPress: () => BackHandler.exitApp(), style: 'destructive' },
       ],
-      {
-        cancelable: true,
-        onDismiss: () => { },
-      },
+      { cancelable: true }
     );
     return true;
-  }
+  };
 
+  /* 뒤로 가기 버튼 핸들러 등록 및 해제 */
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
     return () => backHandler.remove();
   }, []);
 
   return (
     <>
+      {/* 하단탭 */}
       {activeTab === 0 ?
         <View style={styles.fullbox}>
           <Text style={{ color: "black" }}>{fcmToken}</Text>
@@ -150,6 +157,7 @@ const BottomNavigationBar = () => {
           </View>
       }
 
+      {/* navbar */}
       <View style={styles.navigationBar}>
         {screens.map((screen, index) => (
           <BottomNavigationTab
@@ -159,6 +167,7 @@ const BottomNavigationBar = () => {
             isActive={index === activeTab}
           />
         ))}
+      {/* navbar 가운데 */}
         <TouchableOpacity style={styles.main} activeOpacity={0.9}
           onPress={() => setActiveTab(2)}
         ></TouchableOpacity>
