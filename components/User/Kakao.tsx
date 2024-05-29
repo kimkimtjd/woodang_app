@@ -48,7 +48,6 @@ export default function Home() {
     /* 카카오 로그인일경우 */
     if (nativeEvent?.feature === 'request-kakao-login') {
       signInWithKakao()
-      setLogin_yn(false);
     }
 
   };
@@ -56,7 +55,6 @@ export default function Home() {
   /* 카카오 로그인 */
   const signInWithKakao = async () => {
     try {
-      setLogin_yn(true);
       const result = await login();
       const accessToken = result.accessToken;
 
@@ -69,6 +67,13 @@ export default function Home() {
         });
         if (webviewRef.current) {
           (webviewRef.current as any).postMessage(message);
+          if((webviewRef.current as any).postMessage(message) === "undefined"){
+            setLogin_yn(false);  
+          }
+          else{
+            setLogin_yn(true);  
+          }
+          
         }
 
       } else {
