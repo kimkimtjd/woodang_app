@@ -1,4 +1,4 @@
-package com.babysheet
+package com.azang
 
 import android.app.Application
 import com.facebook.react.PackageList

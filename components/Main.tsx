@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, BackHandler, Alert, PermissionsAndroid, Platform } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
-import { shadow } from 'react-native-paper';
+import Home from './User/Kakao';
 
 const Width = Dimensions.get('window').width;
 const Height = Dimensions.get('window').height;
@@ -20,7 +20,7 @@ const BottomNavigationTab: React.FC<BottomNavigationTabProps> = ({ label, onPres
       alignItems: 'center',
       justifyContent: 'center',
       height: 64,
-      backgroundColor:"rgba(238, 240, 246, 1)",
+      backgroundColor: "rgba(238, 240, 246, 1)",
       shadowOffset: {
         width: 5,
         height: 5,
@@ -35,7 +35,7 @@ const BottomNavigationTab: React.FC<BottomNavigationTabProps> = ({ label, onPres
       alignItems: 'center',
       justifyContent: 'center',
       height: 64,
-      backgroundColor:"rgba(238, 240, 246, 1)",
+      backgroundColor: "rgba(238, 240, 246, 1)",
       // backgroundColor: isActive ? 'lightgray' : 'white', // Change color based on active state
       borderTopRightRadius: 10
     },
@@ -86,7 +86,7 @@ const BottomNavigationBar = () => {
           }
         );
 
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {          
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           getFcmToken();
         } else {
           console.log("알림 권한이 거부되었습니다.");
@@ -105,7 +105,7 @@ const BottomNavigationBar = () => {
 
   }, []);
 
-  /* FCM 토큰 생성 */  
+  /* FCM 토큰 생성 */
   const getFcmToken = async () => {
     const token = await messaging().getToken();
     if (token) {
@@ -115,7 +115,7 @@ const BottomNavigationBar = () => {
     }
   };
 
-  /* navbar 탭전환 */ 
+  /* navbar 탭전환 */
   const handleTabPress = (index: number) => {
     setActiveTab(index);
   };
@@ -144,16 +144,16 @@ const BottomNavigationBar = () => {
     <>
       {/* 하단탭 */}
       {activeTab === 0 ?
-        <View style={styles.fullbox}>
-          <Text style={{ color: "black" }}>{fcmToken}</Text>
+        <View>
+
         </View>
         : activeTab === 1 ?
-          <View style={styles.fullbox}>
-            <Text style={{ color: "black" }}>일지</Text>
+          <View>
+
           </View>
           :
-          <View style={styles.fullbox}>
-            <Text style={{ color: "black" }}>메인</Text>
+          <View>
+
           </View>
       }
 
@@ -167,7 +167,7 @@ const BottomNavigationBar = () => {
             isActive={index === activeTab}
           />
         ))}
-      {/* navbar 가운데 */}
+        {/* navbar 가운데 */}
         <TouchableOpacity style={styles.main} activeOpacity={0.9}
           onPress={() => setActiveTab(2)}
         ></TouchableOpacity>
@@ -195,10 +195,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     right: (Width / 2) - (64 / 2)
   },
-  fullbox: {
-    width: Width,
-    height: Height,
-  }
 });
 
 export default BottomNavigationBar;
