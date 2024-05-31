@@ -5,6 +5,9 @@ import { useEffect, useRef, useState } from 'react';
 import { login } from '@react-native-seoul/kakao-login';
 import BottomNavigationBar from '../Main';
 import axios from 'axios';
+import { setStorage, getStorage, getAllStoredData } from '../Commin/Async';
+
+
 
 const Width = Dimensions.get('window').width;
 const Height = Dimensions.get('window').height;
@@ -13,6 +16,7 @@ const Height = Dimensions.get('window').height;
 export default function Home() {
 
   const [login_yn, setLogin_yn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   /* 웹뷰 통신을 위해 설정 */
   const webviewRef = useRef(null);
@@ -37,6 +41,27 @@ export default function Home() {
     return () => backHandler.remove();
   }, []);
 
+  /* 자동로그인 진행 */
+  useEffect(() => {
+    getStorage("User").then((value) => {
+      setTimeout(() => {
+        if (value === null) {
+          setLogin_yn(false)
+        }
+        else {
+          (webviewRef.current as any).postMessage(JSON.stringify({
+            feature: 'response-kakao-login',
+            data: { kakaoId: value?.trim().replace(/"/g, "") },
+          }));
+          setLogin_yn(true)
+        }
+      }, 500)
+
+    }).catch((error) => {
+      console.error('Error retrieving data from AsyncStorage', error);
+    });
+
+  }, [login_yn]);
 
   /* StackNavigation animation 적용을 위해 변수 셋팅 */
   const targetUrl = 'http://prod.pelvicbio.com/';
@@ -67,13 +92,16 @@ export default function Home() {
         });
         if (webviewRef.current) {
           (webviewRef.current as any).postMessage(message);
-          if((webviewRef.current as any).postMessage(message) === "undefined"){
-            setLogin_yn(false);  
+
+          // 회원가입이 안되있을경우
+          if ((webviewRef.current as any).postMessage(message) === "undefined") {
+            setLogin_yn(false);
           }
-          else{
-            setLogin_yn(true);  
+          else {
+            setLogin_yn(true);
+            setStorage('User', String(userId));
           }
-          
+
         }
 
       } else {
@@ -111,8 +139,8 @@ export default function Home() {
         style={{ width: Width, height: Height }}
         onMessage={requestOnMessage}
       />
-      {login_yn?
-        <BottomNavigationBar/>
+      {login_yn ?
+        <BottomNavigationBar />
         :
         <></>
       }

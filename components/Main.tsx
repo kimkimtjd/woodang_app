@@ -110,7 +110,7 @@ const BottomNavigationBar = () => {
     const token = await messaging().getToken();
     if (token) {
       setFcmToken(token);
-      console.log(token)
+      // console.log(token)
     } else {
     }
   };
