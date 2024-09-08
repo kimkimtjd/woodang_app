@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, BackHandler, Alert, PermissionsAndroid, Platform } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
-import Home from './User/Kakao';
+import Calender from './Navigation/Calender';
+import Mypage from './Navigation/Mypage';
+import Notify from './Navigation/Notify';
 
 const Width = Dimensions.get('window').width;
 const Height = Dimensions.get('window').height;
+
 
 interface BottomNavigationTabProps {
   label: string;
@@ -12,108 +14,71 @@ interface BottomNavigationTabProps {
   isActive: boolean;
 }
 
-/* navbar */
-const BottomNavigationTab: React.FC<BottomNavigationTabProps> = ({ label, onPress, isActive }) => {
-  const styles = StyleSheet.create({
-    tab: {
-      width: Width / 2,
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: 64,
-      backgroundColor: "rgba(238, 240, 246, 1)",
-      shadowOffset: {
-        width: 5,
-        height: 5,
-      },
-      elevation: 5,
-      shadowColor: '#E21B5814',
-      // backgroundColor: isActive ? 'lightgray' : 'white', // Change color based on active state
-      borderTopLeftRadius: 10
-    },
-    tabsecond: {
-      width: Width / 2,
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: 64,
-      backgroundColor: "rgba(238, 240, 246, 1)",
-      // backgroundColor: isActive ? 'lightgray' : 'white', // Change color based on active state
-      borderTopRightRadius: 10
-    },
-    tabLabel: {
-      fontSize: 16,
-      color: "rgba(187, 191, 205, 1)"
-    },
-  });
-
-  return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
-      {label === "홈" ?
-        <View style={styles.tab}>
-          <Text style={styles.tabLabel}>{label}</Text>
-        </View>
-        :
-        <View style={styles.tabsecond}>
-          <Text style={styles.tabLabel}>{label}</Text>
-        </View>
-      }
-    </TouchableOpacity>
-  );
-
-};
 
 /* navbar */
 const BottomNavigationBar = () => {
   const [activeTab, setActiveTab] = useState(0);
-  const [fcmToken, setFcmToken] = useState('');
 
   const screens = [
     { label: '홈', onPress: () => console.log('Home pressed') },
-    { label: '일지', onPress: () => console.log('Settings pressed') },
+    { label: '마이페이지', onPress: () => console.log('Settings pressed') },
+    { label: '공지사항', onPress: () => console.log('Settings pressed') },
   ];
 
-  /* 알림권한부여 */
-  const requestPermissions_first = async () => {
-    try {
-      if (Platform.OS === 'android') {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-          {
-            title: "알림 권한 요청",
-            message: "앱에서 알림을 보내기 위해 권한이 필요합니다.",
-            buttonNeutral: "나중에",
-            buttonNegative: "취소",
-            buttonPositive: "허용"
-          }
-        );
+  /* navbar */
+  const BottomNavigationTab: React.FC<BottomNavigationTabProps> = ({ label, onPress, isActive }) => {
+    const styles = StyleSheet.create({
+      tab: {
+        width: Width / 3,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 64,
+        backgroundColor: "#05052F",
+      },
+      tabLabel: {
+        fontSize: 16,
+        color: "rgba(187, 191, 205, 1)"
+      },
+      tabLabelactive: {
+        fontSize: 16,
+        color: "rgb(255, 36, 0)"
+      },
+    });
 
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          getFcmToken();
-        } else {
-          console.log("알림 권한이 거부되었습니다.");
+    return (
+      <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
+        {label === "홈" ?
+          <View style={styles.tab}>
+            {activeTab === 0 ?
+              <Text style={styles.tabLabelactive}>홈</Text>
+              :
+              <Text style={styles.tabLabel}>홈</Text>
+            }
+          </View>
+          :
+          label === "마이페이지" ?
+            <View style={styles.tab}>
+              {activeTab === 1 ?
+                <Text style={styles.tabLabelactive}>마이페이지</Text>
+                :
+                <Text style={styles.tabLabel}>마이페이지</Text>
+              }
+            </View>
+            :
+            <View style={styles.tab}>
+              {activeTab === 2 ?
+                <Text style={styles.tabLabelactive}>공지사항</Text>
+                :
+                <Text style={styles.tabLabel}>공지사항</Text>
+              }
+            </View>
         }
-      }
-    } catch (err) {
-      console.warn(err);
-    }
+      </TouchableOpacity>
+    );
+
   };
 
-  /* 안드로이드확인후 알림권한을 실행 */
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      requestPermissions_first()
-    }
 
-  }, []);
-
-  /* FCM 토큰 생성 */
-  const getFcmToken = async () => {
-    const token = await messaging().getToken();
-    if (token) {
-      setFcmToken(token);
-      // console.log(token)
-    } else {
-    }
-  };
 
   /* navbar 탭전환 */
   const handleTabPress = (index: number) => {
@@ -144,16 +109,16 @@ const BottomNavigationBar = () => {
     <>
       {/* 하단탭 */}
       {activeTab === 0 ?
-        <View>
-
+        <View style= {{ display:"flex" , justifyContent:"center" , alignItems:"center" , backgroundColor:"#FFFFFF" , width:Width , height:Height}}>
+          <Calender />
         </View>
         : activeTab === 1 ?
-          <View>
-
+          <View style={{ flex:1 }}>
+            <Mypage/>
           </View>
           :
-          <View>
-
+          <View style={{ flex:1 }}>
+            <Notify/>
           </View>
       }
 
@@ -167,10 +132,6 @@ const BottomNavigationBar = () => {
             isActive={index === activeTab}
           />
         ))}
-        {/* navbar 가운데 */}
-        <TouchableOpacity style={styles.main} activeOpacity={0.9}
-          onPress={() => setActiveTab(2)}
-        ></TouchableOpacity>
       </View>
     </>
   );
@@ -183,17 +144,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: Width,
     height: 64,
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
-  },
-  main: {
-    width: 64,
-    height: 64,
-    backgroundColor: "rgba(255, 48, 111, 1)",
-    position: "absolute",
-    top: -32,
-    borderRadius: 50,
-    right: (Width / 2) - (64 / 2)
+    backgroundColor: "#05052F",
   },
 });
 

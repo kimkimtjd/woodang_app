@@ -9,7 +9,7 @@ const Width = Dimensions.get('window').width;
 const Height = Dimensions.get('window').height;
 
 
-export default function Home() {
+export default function Login() {
 
   const [login_yn, setLogin_yn] = useState(false);
   const [id, setid] = useState("");
@@ -36,89 +36,65 @@ export default function Home() {
     return () => backHandler.remove();
   }, []);
 
-  /* 자동로그인 진행 */
-  // useEffect(() => {
-  //   getStorage("User").then((value) => {
-  //     setTimeout(() => {
-  //       if (value === null) {
-  //         setLogin_yn(false)
-  //       }
-  //       else {
-  //         setLogin_yn(true)
-  //       }
-  //     }, 500)
 
-  //   }).catch((error) => {
-  //     console.error('Error retrieving data from AsyncStorage', error);
-  //   });
-
-  // }, [login_yn]);
-
-  // function Login() {
-  //   if (id === "123" && pw === "123") {
-  //     setLogin_yn(true)
-  //     setStorage("User", id)
-  //   }
-  //   else {
-  //     Alert.alert('아이디 또는 비밀번호 확인요망', '', [
-  //       { text: '확인', onPress: () => console.log('OK Pressed') },
-  //     ]);
-  //   }
-  // }
+  function Login() {
+    if (id === "123" && pw === "123") {
+      setLogin_yn(true)
+      setStorage("User", id)
+    }
+    else {
+      Alert.alert('아이디 또는 비밀번호 확인요망', '', [
+        { text: '확인', onPress: () => console.log('OK Pressed') },
+      ]);
+    }
+  }
 
   return (
     <>
-     <BottomNavigationBar />
-      {/* {login_yn
-        ?
-        <BottomNavigationBar />
-        :
-        <View style={styles.container}>
+      <View style={styles.container}>
 
-          <View style={styles.titlebox} />
+        <View style={styles.titlebox} />
 
-          <View style={styles.logobox}>
-            <Image source={require('../Commin/logo.png')}
-              style={{
-                width: 168,
-                height: 122,
-              }}
-            />
-          </View>
-
-          <View style={styles.titlebox}>
-            <View style={styles.tabLabel} />
-            <Text style={styles.tabLabel}>아이디</Text>
-            <TextInput
-              style={styles.input}
-              value={id}
-              onChangeText={(text) => { setid(text) }}
-            />
-            <View style={styles.tabLabel} />
-          </View>
-          <View style={styles.titlebox}>
-            <View style={styles.tabLabel} />
-            <Text style={styles.tabLabel}>비밀번호</Text>
-            <TextInput
-              style={styles.input}
-              value={pw}
-              onChangeText={(text) => { setpw(text) }}
-            />
-            <View style={styles.tabLabel} />
-          </View>
-
-          <View style={styles.logintotalbox}>
-            <TouchableOpacity style={styles.loginbox} activeOpacity={0.9}
-              onPress={() => Login()}>
-              <Text style={{ fontWeight: "700", color: "black" }}>로그인</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.titlebox} />
-
+        <View style={styles.logobox}>
+          <Image source={require('../Commin/logo.png')}
+            style={{
+              width: 168,
+              height: 122,
+            }}
+          />
         </View>
-      } */}
 
+        <View style={styles.titlebox}>
+          <View style={styles.tabLabel} />
+          <Text style={styles.tabLabel}>아이디</Text>
+          <TextInput
+            style={styles.input}
+            value={id}
+            onChangeText={(text) => { setid(text) }}
+          />
+          <View style={styles.tabLabel} />
+        </View>
+        <View style={styles.titlebox}>
+          <View style={styles.tabLabel} />
+          <Text style={styles.tabLabel}>비밀번호</Text>
+          <TextInput
+            style={styles.input}
+            value={pw}
+            onChangeText={(text) => { setpw(text) }}
+          />
+          <View style={styles.tabLabel} />
+        </View>
+
+        <View style={styles.logintotalbox}>
+          <TouchableOpacity style={styles.loginbox} activeOpacity={0.9}
+            onPress={() => Login()}>
+            <Text style={{ fontWeight: "700", color: "black" }}>로그인</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.titlebox} />
+
+      </View>
     </>
 
   );
