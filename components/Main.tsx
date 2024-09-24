@@ -109,15 +109,15 @@ const BottomNavigationBar = () => {
     <>
       {/* 하단탭 */}
       {activeTab === 0 ?
-        <View style= {{ display:"flex" , justifyContent:"center" , alignItems:"center" , backgroundColor:"#FFFFFF" , width:Width , height:Height}}>
+        <View style= {{ display:"flex" , justifyContent:"center" , alignItems:"center" , backgroundColor:"#FFFFFF" , width:Width , height:Height-64}}>
           <Calender />
         </View>
         : activeTab === 1 ?
-          <View style={{ flex:1 }}>
+          <View style= {{ display:"flex" , justifyContent:"center" , alignItems:"center" , backgroundColor:"#FFFFFF" , width:Width , height:Height-64}}>
             <Mypage/>
           </View>
           :
-          <View style={{ flex:1 }}>
+          <View style= {{ display:"flex" , justifyContent:"center" , alignItems:"center" , backgroundColor:"#FFFFFF" , width:Width , height:Height-64}}>
             <Notify/>
           </View>
       }
